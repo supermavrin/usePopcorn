@@ -3,9 +3,17 @@ import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
 
-export default function MovieDetails({ selectedId, onCloseMovie, apiKey }) {
+export default function MovieDetails({
+  selectedId,
+  onCloseMovie,
+  apiKey,
+  watched,
+  onAddWatched,
+  onRemoveWatched,
+}) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isOnWatchlist, setIsOnWatchlist] = useState(false);
 
   const {
     Title: title,
@@ -13,6 +21,7 @@ export default function MovieDetails({ selectedId, onCloseMovie, apiKey }) {
     Poster: poster,
     Runtime: runtime,
     imdbRating,
+    imdbID,
     Plot: plot,
     Released: released,
     Actors: actors,
@@ -40,6 +49,9 @@ export default function MovieDetails({ selectedId, onCloseMovie, apiKey }) {
             throw new Error(`There was an error fetching movie details!`);
 
           setMovie(data);
+          setIsOnWatchlist(
+            watched.map((movie) => movie.imdbID).includes(data.imdbID)
+          );
           setIsLoading(false);
         } catch (err) {
           console.error("Error fetching movie details: ", err);
@@ -85,6 +97,15 @@ export default function MovieDetails({ selectedId, onCloseMovie, apiKey }) {
                 size={24}
                 defaultRating={imdbRating ? Math.round(imdbRating) : 0}
               />
+              <button
+                onClick={
+                  !isOnWatchlist
+                    ? () => onAddWatched(movie)
+                    : () => onRemoveWatched(movie.imdbID)
+                }
+              >
+                {!isOnWatchlist ? "Add to Watchlist" : "Remove from Watchlist"}
+              </button>
             </div>
             <p>
               <em>{plot}</em>

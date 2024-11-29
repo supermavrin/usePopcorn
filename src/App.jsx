@@ -36,6 +36,16 @@ export default function App() {
     setSelectedId(null);
   }
 
+  function handleAddWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
+
+  function handleRemoveWatched(id) {
+    const indexToRemove = watched.findIndex((movie) => movie.imdbID === id);
+    const newWatchedList = watched.toSpliced(indexToRemove, 1);
+    setWatched(newWatchedList);
+  }
+
   useEffect(
     function () {
       async function fetchMovies() {
@@ -94,6 +104,9 @@ export default function App() {
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
               apiKey={KEY}
+              watched={watched}
+              onAddWatched={handleAddWatched}
+              onRemoveWatched={handleRemoveWatched}
             />
           ) : (
             <>
