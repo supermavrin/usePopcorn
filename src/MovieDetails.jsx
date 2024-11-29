@@ -83,7 +83,7 @@ export default function MovieDetails({ selectedId, onCloseMovie, apiKey }) {
               <StarRating
                 maxRating={10}
                 size={24}
-                defaultRating={imdbRating ? Math.floor(imdbRating) : 0}
+                defaultRating={imdbRating ? Math.round(imdbRating) : 0}
               />
             </div>
             <p>
