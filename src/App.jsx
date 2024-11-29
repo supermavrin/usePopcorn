@@ -43,10 +43,8 @@ export default function App() {
         setError("");
         try {
           const res = await fetch(
-            `http://www.omdbapi.com/?s=${query}&apikey=${KEY}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
           );
-
-          console.log("res", res);
 
           if (!res.ok)
             throw new Error("Something went wrong with fetching movies!");
