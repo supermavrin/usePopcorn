@@ -13,7 +13,15 @@ export default function MovieDetails({
 }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isOnWatchlist, setIsOnWatchlist] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+
+  const isOnWatchlist = watched
+    .map((movie) => movie.imdbID)
+    .includes(selectedId);
+
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title: title,
@@ -29,6 +37,25 @@ export default function MovieDetails({
     Genre: genre,
   } = movie;
 
+  function handleAdd() {
+    const newWatchedMovie = {
+      title,
+      poster,
+      runtime: Number(runtime.split(" ").at(0)),
+      imdbRating: Number(imdbRating),
+      imdbID,
+      userRating: userRating,
+    };
+
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  }
+
+  function handleRemove(id) {
+    onRemoveWatched(id);
+    onCloseMovie();
+  }
+
   useEffect(
     function () {
       async function getMovieDetails(id) {
@@ -43,15 +70,10 @@ export default function MovieDetails({
 
           const data = await res.json();
 
-          console.log(data);
-
           if (data.Response === "False")
             throw new Error(`There was an error fetching movie details!`);
 
           setMovie(data);
-          setIsOnWatchlist(
-            watched.map((movie) => movie.imdbID).includes(data.imdbID)
-          );
           setIsLoading(false);
         } catch (err) {
           console.error("Error fetching movie details: ", err);
@@ -63,7 +85,7 @@ export default function MovieDetails({
 
       getMovieDetails(selectedId);
     },
-    [selectedId]
+    [selectedId, watched]
   );
 
   return (
@@ -92,20 +114,28 @@ export default function MovieDetails({
 
           <section>
             <div className="rating">
-              <StarRating
-                maxRating={10}
-                size={24}
-                defaultRating={imdbRating ? Math.round(imdbRating) : 0}
-              />
-              <button
-                onClick={
-                  !isOnWatchlist
-                    ? () => onAddWatched(movie)
-                    : () => onRemoveWatched(movie.imdbID)
-                }
-              >
-                {!isOnWatchlist ? "Add to Watchlist" : "Remove from Watchlist"}
-              </button>
+              {!isOnWatchlist ? (
+                <StarRating
+                  maxRating={10}
+                  size={24}
+                  defaultRating={userRating ? 1 : 0}
+                  onSetRating={setUserRating}
+                />
+              ) : (
+                <span>You rated this movie {watchedUserRating} ⭐!</span>
+              )}
+              {!isOnWatchlist ? (
+                <button className="btn-add" onClick={handleAdd}>
+                  + Add to Watchlist
+                </button>
+              ) : (
+                <button
+                  className="btn-add"
+                  onClick={() => handleRemove(movie.imdbID)}
+                >
+                  - Remove from Watchlist
+                </button>
+              )}
             </div>
             <p>
               <em>{plot}</em>

@@ -41,9 +41,7 @@ export default function App() {
   }
 
   function handleRemoveWatched(id) {
-    const indexToRemove = watched.findIndex((movie) => movie.imdbID === id);
-    const newWatchedList = watched.toSpliced(indexToRemove, 1);
-    setWatched(newWatchedList);
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
   useEffect(
@@ -111,7 +109,11 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} average={average} />
-              <WatchedMoviesList watched={watched} />
+              <WatchedMoviesList
+                watched={watched}
+                onSelectMovie={handleSelectMovie}
+                onRemoveWatched={handleRemoveWatched}
+              />
             </>
           )}
         </Box>
