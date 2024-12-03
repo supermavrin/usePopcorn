@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import StarRating from "./StarRating";
 import Loader from "./Loader";
@@ -14,6 +14,13 @@ export default function MovieDetails({
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(0);
+
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    console.log(countRef);
+    if (userRating) countRef.current = countRef.current + 1;
+  }, [userRating]);
 
   const isOnWatchlist = watched
     .map((movie) => movie.imdbID)
@@ -45,6 +52,7 @@ export default function MovieDetails({
       imdbRating: Number(imdbRating),
       imdbID,
       userRating: userRating,
+      countRatingDecisions: countRef.current,
     };
 
     onAddWatched(newWatchedMovie);
@@ -85,7 +93,7 @@ export default function MovieDetails({
 
       getMovieDetails(selectedId);
     },
-    [selectedId, watched]
+    [selectedId, watched, apiKey]
   );
 
   useEffect(
@@ -125,7 +133,7 @@ export default function MovieDetails({
             &larr;
           </button>
           <header>
-            <img src={poster} alt={`Image of a poster for ${title}.`} />
+            <img src={poster} alt={`Poster for ${title}.`} />
             <div className="details-overview">
               <h2>{title}</h2>
               <p>
