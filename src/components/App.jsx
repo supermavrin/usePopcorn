@@ -2,20 +2,20 @@
 import { useEffect, useState } from "react";
 
 // Custom Hooks
-import { useMovies } from "./useMovies";
+import { useMovies } from "../hooks/useMovies";
 
 // Components
-import MovieList from "./MovieList";
-import Loader from "./Loader";
-import NavBar from "./NavBar";
-import Box from "./Box";
-import ErrorMessage from "./ErrorMessage";
-import Search from "./Search";
-import WatchedSummary from "./WatchedSummary";
-import WatchedMoviesList from "./WatchedMoviesList";
-import MovieDetails from "./MovieDetails";
-import Main from "./Main";
-import NumResults from "./NumResults";
+import MovieList from "../components/MovieList";
+import Loader from "../components/Loader";
+import NavBar from "../components/NavBar";
+import Box from "../components/Box";
+import ErrorMessage from "../components/ErrorMessage";
+import Search from "../components/Search";
+import WatchedSummary from "../components/WatchedSummary";
+import WatchedMoviesList from "../components/WatchedMoviesList";
+import MovieDetails from "../components/MovieDetails";
+import Main from "../components/Main";
+import NumResults from "../components/NumResults";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
